@@ -1,0 +1,27 @@
+<%= form_with(model: bill, html: { class: 'e-form' }) do |form| %>
+  <% if bill.errors.any? %>
+    <div style="color: red; text-align: center;">
+      <ul style="list-style-type: none; padding: 0;">
+        <% bill.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-container">
+    <div class="form-group">
+      <%= form.label :amount, style: "display: block" %>
+      <%= form.number_field :amount, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :bill_type, "Bill type", style: "display: block" %>
+      <%= form.select :bill_type, Bill.bill_types.keys.map { |k| [k.humanize, k] }, { prompt: "Select Bill type" }, { class: "form-control" } %>
+    </div>
+
+    <div>
+      <%= form.submit class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

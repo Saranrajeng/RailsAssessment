@@ -1,0 +1,52 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Bills" %>
+
+<h1>Bills</h1>
+<%= link_to "New bill", new_bill_path if current_user.employee? %>
+<div class="d-flex justify-content-around">
+  <div><strong>Total Submitted:</strong><%= @total_submitted%></div>
+  <div><strong>Total Approved:</strong><%= @total_approved%></div>
+</div>
+<div class="table-container">
+<table class="table table-striped table-bordered">
+  <thead>
+     <tr>
+     <th scope="col">Type</th>
+     <th scope="col">Amount</th>
+     <th scope="col">Date of Submission</th>
+     <% if current_user.admin? %>
+       <th scope="col">Submitted by</th>
+       <th scope="col">Department</th>
+     <% end %>
+     <th scope="col">Status</th>
+     <% if current_user.admin? %>
+       <th scope="col">Action</th>
+     <% end %>
+     </tr>
+  </thead>
+  <tbody>
+    <% @bills.each do |bill| %>
+      <tr>
+        <td><%= bill.bill_type.capitalize%></td>
+        <td><%= bill.amount%></td>
+        <td><%= bill.created_at.strftime("%d-%m-%Y")%></td>
+        <% if current_user.admin? %>
+          <% submited_by = bill.submitted_by %>
+          <td><%= submited_by.full_name %></td>
+          <td><%= submited_by.department.name %></td>
+        <% end %>
+        <td><%= bill.status.capitalize%></td>
+        <% if current_user.admin? && bill.pending? %>
+          <td>
+            <%= link_to 'Approve', approve_bill_path(bill), method: :patch, class: 'btn btn-success' %>
+            <%= link_to 'Reject', reject_bill_path(bill), method: :patch, class: 'btn btn-danger' %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+
